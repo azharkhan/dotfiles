@@ -84,3 +84,5 @@ function git_prompt {
 #GIT_PROMPT_PREFIX="%{$fg[black]%}[%{$reset_color%}"
 #GIT_PROMPT_SUFFIX="%{$fg[black]%}]%{$reset_color%}"
 RPROMPT='[$(git_prompt)]'
+# Disable Hostnmae Completion
+zstyle ':completion:*' hosts off
