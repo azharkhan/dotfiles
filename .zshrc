@@ -86,3 +86,7 @@ function git_prompt {
 RPROMPT='[$(git_prompt)]'
 # Disable Hostnmae Completion
 zstyle ':completion:*' hosts off
+# Speed up Git Completion
+__git_files () { 
+      _wanted files expl 'local files' _files     
+    }
