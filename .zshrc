@@ -48,7 +48,7 @@ source $ZSH/oh-my-zsh.sh
 # Customize to your needs...
 export PATH=$PATH:/Users/azhar/.rvm/gems/ruby-1.9.3-p194/bin:/Users/azhar/.rvm/gems/ruby-1.9.3-p194@global/bin:/Users/azhar/.rvm/rubies/ruby-1.9.3-p194/bin:/Users/azhar/.rvm/bin:/usr/local/bin/:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/texbin:/usr/local/share/python:/Users/azhar/bin
 
-PROMPT='%{$fg[magenta]%}%n%{$reset_color%}%{$fg[blue]%}@%m%{$reset_color%}%{$fg_bold[green]%}:%~%{$reset_color%} %{$fg_bold[black]%}➜ %{$reset_color%} '
+PROMPT='%{$fg[magenta]%}%n%{$reset_color%}%{$fg[blue]%}@%m%{$reset_color%}%{$fg_bold[green]%} %~%{$reset_color%} %{$fg_bold[black]%}➜ %{$reset_color%} '
 
 function git_prompt {
 	local DIRTY="%{$fg[yellow]%}"
