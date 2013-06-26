@@ -59,7 +59,6 @@ function git_prompt {
 	
 	if [[ $? == 0 ]]
 	then
-			echo -n "["
 			if [[ `git ls-files -u >& /dev/null` == '' ]]
 			then
 					git diff --quiet >& /dev/null
@@ -80,7 +79,6 @@ function git_prompt {
 			fi
 			echo -n `git branch | grep '* ' | sed 's/..//'`
 			echo -n $RESET
-			echo -n "]"
 	fi
 }
-RPROMPT='$(git_prompt)'
+RPROMPT='[$(git_prompt)]'
