@@ -48,4 +48,39 @@ source $ZSH/oh-my-zsh.sh
 # Customize to your needs...
 export PATH=$PATH:/Users/azhar/.rvm/gems/ruby-1.9.3-p194/bin:/Users/azhar/.rvm/gems/ruby-1.9.3-p194@global/bin:/Users/azhar/.rvm/rubies/ruby-1.9.3-p194/bin:/Users/azhar/.rvm/bin:/usr/local/bin/:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/texbin:/usr/local/share/python:/Users/azhar/bin
 
-PROMPT='%{$fg[magenta]%}%n%{$reset_color%} in %{$fg_bold[green]%}%~%{$reset_color%} %{$fg[blue]%}➜ %{$reset_color%} '
+PROMPT='%{$fg[magenta]%}%n%{$reset_color%}%{$fg[blue]%}@%m%{$reset_color%}%{$fg_bold[yellow]%}:%~%{$reset_color%} %{$fg[red]%}➜ %{$reset_color%} '
+
+function git_prompt {
+	local DIRTY="%{$fg[yellow]%}"
+	local CLEAN="%{$fg[green]%}"
+	local UNMERGED="%{$fg[red]%}"
+	local RESET="%{$terminfo[sgr0]%}"
+	git rev-parse --git-dir >& /dev/null
+	
+	if [[ $? == 0 ]]
+	then
+			echo -n "["
+			if [[ `git ls-files -u >& /dev/null` == '' ]]
+			then
+					git diff --quiet >& /dev/null
+					if [[ $? == 1 ]]
+					then
+							echo -n $DIRTY
+					else
+							git diff --cached --quiet >& /dev/null
+							if [[ $? == 1 ]]
+							then
+									echo -n $DIRTY
+							else
+									echo -n $CLEAN
+							fi
+					fi
+			else
+					echo -n $UNMERGED
+			fi
+			echo -n `git branch | grep '* ' | sed 's/..//'`
+			echo -n $RESET
+			echo -n "]"
+	fi
+}
+RPROMPT='$(git_prompt)'
