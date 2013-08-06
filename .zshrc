@@ -92,3 +92,7 @@ zstyle ':completion:*' hosts off
 __git_files () { 
       _wanted files expl 'local files' _files     
     }
+
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Sites
+source /usr/local/bin/virtualenvwrapper.sh
