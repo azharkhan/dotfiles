@@ -11,7 +11,7 @@ ZSH_THEME="robbyrussell"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias bapp="cd ~/Sites/bookapp-utils"
-alias sht="cd ~/Sites/twitter-django/superheroTwitter"
+alias sht="cd ~/Sites/new-django-twitter/superhero_twitter/"
 alias pserver="python -m SimpleHTTPServer"
 
 # Set to this to use case-sensitive completion
@@ -49,6 +49,8 @@ source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
 export PATH=$PATH:/Users/azhar/.rvm/gems/ruby-1.9.3-p194/bin:/Users/azhar/.rvm/gems/ruby-1.9.3-p194@global/bin:/Users/azhar/.rvm/rubies/ruby-1.9.3-p194/bin:/Users/azhar/.rvm/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/texbin:/usr/local/share/python:/Users/azhar/bin
+
+PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
 
 PROMPT='%{$fg[magenta]%}%n%{$reset_color%}%{$fg[blue]%}@%m%{$reset_color%}%{$fg_bold[green]%} %~%{$reset_color%} %{$fg_bold[black]%}➜ %{$reset_color%} '
 
