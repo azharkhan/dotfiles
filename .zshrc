@@ -11,8 +11,8 @@ ZSH_THEME="robbyrussell"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias bapp="cd ~/Sites/bookapp-utils"
-alias sht="cd ~/Sites/new-django-twitter/superhero_twitter/"
 alias pserver="python -m SimpleHTTPServer"
+alias sshwww="ssh azhkha@thomas-mifflin.dreamhost.com"
 
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
