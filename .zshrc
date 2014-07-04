@@ -1,6 +1,9 @@
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
+# Load functions
+. ~/.functions
+
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
@@ -10,9 +13,19 @@ ZSH_THEME="robbyrussell"
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias bapp="cd ~/Sites/bookapp-utils"
-alias pserver="python -m SimpleHTTPServer"
-alias sshwww="ssh azhkha@thomas-mifflin.dreamhost.com"
+alias glpb="cd ~/projects/gallop/gallop_django"
+alias glpa="cd ~/projects/gallop/gallop_angular"
+alias f8="find . -name '*.py' -not -path '*/migrations/*'  -exec flake8 --max-line-length=5000 --show-source {} \;"
+alias p8="find . -name '*.py' -not -path '*/migrations/*' -exec pep8 --max-line-length=5000 --show-source {} \;"
+alias evt="cd ~/projects/gallop-event-tracking-service"
+alias brew-update="brew update && brew upgrade `brew outdated`"
+alias sshfree="ssh root@m-azhar.m-dal.manas.ca"
+alias p="cd ~/projects"
+
+# Back and Forward one word
+bindkey -e
+bindkey '^[[1;9C' forward-word
+bindkey '^[[1;9D' backward-word
 
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
@@ -43,58 +56,22 @@ alias sshwww="ssh azhkha@thomas-mifflin.dreamhost.com"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git zsh-syntax-highlighting brew bundler rails3 pygmentize-zsh)
+plugins=(git zsh-syntax-highlighting git-flow-completion)
 
 source $ZSH/oh-my-zsh.sh
 
+VIRTUAL_ENV_DISABLE_PROMPT="true"
+
 # Customize to your needs...
-export PATH=$PATH:/Users/azhar/.rvm/gems/ruby-1.9.3-p194/bin:/Users/azhar/.rvm/gems/ruby-1.9.3-p194@global/bin:/Users/azhar/.rvm/rubies/ruby-1.9.3-p194/bin:/Users/azhar/.rvm/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/texbin:/usr/local/share/python:/Users/azhar/bin
-
-PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
-
-PROMPT='%{$fg[magenta]%}%n%{$reset_color%}%{$fg[blue]%}@%m%{$reset_color%}%{$fg_bold[green]%} %~%{$reset_color%} %{$fg_bold[black]%}➜ %{$reset_color%} '
-
-function git_prompt {
-	local DIRTY="%{$fg[yellow]%}"
-	local CLEAN="%{$fg[green]%}"
-	local UNMERGED="%{$fg[red]%}"
-	local RESET="%{$terminfo[sgr0]%}"
-	git rev-parse --git-dir >& /dev/null
-	
-	if [[ $? == 0 ]]
-	then
-			if [[ `git ls-files -u >& /dev/null` == '' ]]
-			then
-					git diff --quiet >& /dev/null
-					if [[ $? == 1 ]]
-					then
-							echo -n $DIRTY
-					else
-							git diff --cached --quiet >& /dev/null
-							if [[ $? == 1 ]]
-							then
-									echo -n $DIRTY
-							else
-									echo -n $CLEAN
-							fi
-					fi
-			else
-					echo -n $UNMERGED
-			fi
-			echo -n `git branch | grep '* ' | sed 's/..//'`
-			echo -n $RESET
-	fi
-}
-#GIT_PROMPT_PREFIX="%{$fg[black]%}[%{$reset_color%}"
-#GIT_PROMPT_SUFFIX="%{$fg[black]%}]%{$reset_color%}"
-RPROMPT='[$(git_prompt)]'
-# Disable Hostnmae Completion
-zstyle ':completion:*' hosts off
-# Speed up Git Completion
-__git_files () { 
-      _wanted files expl 'local files' _files     
-    }
+export PATH=$PATH:/Users/azhar/.rbenv/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:
 
 export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/Sites
 source /usr/local/bin/virtualenvwrapper.sh
+eval "$(rbenv init -)"
+
+[ -s "/Users/azhar/.scm_breeze/scm_breeze.sh" ] && source "/Users/azhar/.scm_breeze/scm_breeze.sh"
+. /usr/local/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
+export EDITOR=/usr/bin/vim
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
