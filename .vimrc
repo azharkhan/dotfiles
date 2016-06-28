@@ -12,29 +12,50 @@ set nocompatible
 
 " Vundle Setup
 
-filetype on
 filetype off
-set rtp+=~/.vim/bundle/vundle
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
 " Bundles {
-    " Use local bundles if available {
-        if filereadable(expand("~/.vimrc.bundles.local"))
-            source ~/.vimrc.bundles.local
-        endif
-    " }
+    " Let Vundle manage itself
+        Plugin 'VundleVim/Vundle.vim'
 
-    " Use bundles config {
-        if filereadable(expand("~/.vimrc.bundles"))
-            source ~/.vimrc.bundles
-        endif
-    " }
+    " General
+        Plugin 'scrooloose/nerdtree'
+        Plugin 'tpope/vim-surround'
+        Plugin 'bling/vim-airline'
+        Plugin 'Townk/vim-autoclose'
+        Plugin 'kien/ctrlp.vim'
+        Plugin 'rking/ag.vim'
+        Plugin 'myusuf3/numbers.vim'
+        Plugin 'nathanaelkane/vim-indent-guides'
+        Plugin 'SirVer/ultisnips'
+
+    " Programming
+        Plugin 'Valloric/YouCompleteMe'
+        Plugin 'tpope/vim-fugitive'
+        Plugin 'scrooloose/syntastic'
+        Plugin 'scrooloose/nerdcommenter'
+        Plugin 'airblade/vim-gitgutter'
+        Plugin 'pangloss/vim-javascript'
+        Plugin 'helino/vim-json'
+        Plugin 'ternjs/tern_for_vim'
+
+    " Colorschemes
+        Plugin 'vim-airline/vim-airline-themes'
+        Plugin 'altercation/vim-colors-solarized'
+        Plugin 'w0ng/vim-hybrid'
+        Plugin 'morhetz/gruvbox'
 " }
 
+call vundle#end()
+filetype plugin indent on
+
+
 " Local Directories {
-set backupdir=~/.vim/backups
-set directory=~/.vim/swaps
-set undodir=~/.vim/undo
+set backupdir=~/.vim/tmp/backup
+set directory=~/.vim/tmp/swaps
+set undodir=~/.vim/tmp/undo
 " }
 
 " Formatting {
@@ -50,20 +71,13 @@ set undodir=~/.vim/undo
     set splitbelow                  " Puts new split windows to the bottom of the current
     "set matchpairs+=<:>             " Match, to be used with %
     set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
-    "set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
     " Remove trailing whitespaces and ^M chars
     autocmd FileType c,cpp,java,go,php,javascript,python,twig,xml,yml autocmd BufWritePre <buffer> call StripTrailingWhitespace()
     autocmd FileType go autocmd BufWritePre <buffer> Fmt
     " preceding line best in a plugin but here for now.
 
-    autocmd BufNewFile,BufRead *.coffee set filetype=coffee
-
     " Workaround for making markdown work
     autocmd BufNewFile,BufReadPost *.md set filetype=markdown
-
-" Implement NERDCommenter
-
-    filetype plugin on
 
 " }
 
@@ -94,7 +108,7 @@ set undodir=~/.vim/undo
 
 " Statusline {
     set laststatus=2
-    let g:airline_theme='powerlineish'
+    let g:airline_theme='gruvbox'
     let g:airline_powerline_fonts=1
 " }
 
@@ -226,24 +240,13 @@ set undodir=~/.vim/undo
             \ 'dir':  '\.git$\|\.hg$\|\.svn$',
             \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
 
-        " On Windows use "dir" as fallback command.
-        if has('win32') || has('win64')
-            let g:ctrlp_user_command = {
-                \ 'types': {
-                    \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
-                    \ 2: ['.hg', 'hg --cwd %s locate -I .'],
-                \ },
-                \ 'fallback': 'dir %s /-n /b /s /a-d'
-            \ }
-        else
-            let g:ctrlp_user_command = {
-                \ 'types': {
-                    \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
-                    \ 2: ['.hg', 'hg --cwd %s locate -I .'],
-                \ },
-                \ 'fallback': 'find %s -type f'
-            \ }
-        endif
+        let g:ctrlp_user_command = {
+            \ 'types': {
+                \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
+                \ 2: ['.hg', 'hg --cwd %s locate -I .'],
+            \ },
+            \ 'fallback': 'find %s -type f'
+        \ }
     "}
 
     " indent_guides {
@@ -260,8 +263,14 @@ set undodir=~/.vim/undo
     " }
 
     " Syntastic {
-        let g:syntastic_javascript_checkers = ['jshint']
+        set statusline+=%warningmsg#
+        set statusline+=%{SyntasticStatuslineFlag()}
+        set statusline+=%*
+
+        let g:syntastic_javascript_checkers = ['eslint']
         let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute " ,"trimming empty <", "unescaped &" , "lacks \"action", "is not recognized!", "discarding unexpected"]
+        let g:syntastic_check_on_open = 1
+        let g:syntastic_check_on_wq = 0
     " }
 
     " Silver Searcher {
@@ -281,8 +290,8 @@ set undodir=~/.vim/undo
             command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
         endif
 
-        " Bind K to search for word under cursor
-        map <C-f> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+        " Bind f to search for word under cursor
+        "map <C-f> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
         " bind \ to grep shortcut
         nnoremap \ :Ag<SPACE>
@@ -292,58 +301,6 @@ set undodir=~/.vim/undo
 " }
 
 " { Function
-
-    " UnBundle {
-    function! UnBundle(arg, ...)
-      let bundle = vundle#config#init_bundle(a:arg, a:000)
-      call filter(g:bundles, 'v:val["name_spec"] != "' . a:arg . '"')
-    endfunction
-
-    com! -nargs=+         UnBundle
-    \ call UnBundle(<args>)
-    " }
-
-    " Initialize directories {
-    function! InitializeDirectories()
-        let parent = $HOME
-        let prefix = 'vim'
-        let dir_list = {
-                    \ 'backup': 'backupdir',
-                    \ 'views': 'viewdir',
-                    \ 'swap': 'directory' }
-
-        if has('persistent_undo')
-            let dir_list['undo'] = 'undodir'
-        endif
-
-        " To specify a different directory in which to place the vimbackup,
-        " vimviews, vimundo, and vimswap files/directories, add the following to
-        " your .vimrc.local file:
-        "   let g:spf13_consolidated_directory = <full path to desired directory>
-        "   eg: let g:spf13_consolidated_directory = $HOME . '/.vim/'
-        if exists('g:spf13_consolidated_directory')
-            let common_dir = g:spf13_consolidated_directory . prefix
-        else
-            let common_dir = parent . '/.' . prefix
-        endif
-
-        for [dirname, settingname] in items(dir_list)
-            let directory = common_dir . dirname . '/'
-            if exists("*mkdir")
-                if !isdirectory(directory)
-                    call mkdir(directory)
-                endif
-            endif
-            if !isdirectory(directory)
-                echo "Warning: Unable to create backup directory: " . directory
-                echo "Try: mkdir -p " . directory
-            else
-                let directory = substitute(directory, " ", "\\\\ ", "g")
-                exec "set " . settingname . "=" . directory
-            endif
-        endfor
-    endfunction
-    " }
 
     " Initialize NERDTree as needed {
     function! NERDTreeInitAsNeeded()
@@ -428,13 +385,7 @@ set undodir=~/.vim/undo
 
 " Default Color Scheme
 syntax enable
+let g:gruvbox_invert_selection=0
 let g:solarized_termcolors=256
+colorscheme gruvbox
 set background=dark
-colorscheme Tomorrow-Night
-set guifont=Inconsolata-g\ for\ Powerline:h18
-
-" Use local vimrc if available {
-    if filereadable(expand("~/.vimrc.local"))
-        source ~/.vimrc.local
-    endif
-" }
