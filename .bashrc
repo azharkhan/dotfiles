@@ -18,13 +18,6 @@ alias tn="tmux new -s"
 alias ta="tmux attach -t"
 alias tk="tmux kill-session -t"
 
-# SSH
-
-alias sshbox="ssh azhar@a-ca.manas.ca"
-alias sshru="ssh -L 8081:127.0.0.1:80 -N azhar@a-ca.manas.ca"
-alias sshplex="ssh -L 32400:127.0.0.1:32400 -N azhar@a-ca.manas.ca"
-alias sshproxy="ssh -N -D 2001 azhar@209.105.232.237"
-
 # SCM Breeze
 [ -s "$HOME/.scm_breeze/scm_breeze.sh" ] && source "$HOME/.scm_breeze/scm_breeze.sh"
 
