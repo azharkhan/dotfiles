@@ -1,0 +1,14 @@
+" Bundles {
+    " Let Vundle manage itself
+        Plugin 'VundleVim/Vundle.vim'
+
+    " General
+        Plugin 'scrooloose/nerdtree'
+        Plugin 'tpope/vim-surround'
+        Plugin 'bling/vim-airline'
+
+    " Colorschemes
+        Plugin 'altercation/vim-colors-solarized'
+        Plugin 'w0ng/vim-hybrid'
+" }
+

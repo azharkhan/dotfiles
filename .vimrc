@@ -24,28 +24,42 @@ call vundle#begin()
         Plugin 'scrooloose/nerdtree'
         Plugin 'tpope/vim-surround'
         Plugin 'bling/vim-airline'
-        Plugin 'Townk/vim-autoclose'
-        Plugin 'kien/ctrlp.vim'
+        Plugin 'justinmk/vim-sneak'
+        Plugin 'Raimondi/delimitMate'
+        Plugin 'ctrlpvim/ctrlp.vim'
+        Plugin 'junegunn/fzf.vim'
         Plugin 'rking/ag.vim'
         Plugin 'myusuf3/numbers.vim'
         Plugin 'nathanaelkane/vim-indent-guides'
         Plugin 'SirVer/ultisnips'
+        Plugin 'junegunn/vim-emoji'
+        Plugin 'ervandew/supertab'
 
     " Programming
-        Plugin 'Valloric/YouCompleteMe'
         Plugin 'tpope/vim-fugitive'
         Plugin 'scrooloose/syntastic'
         Plugin 'scrooloose/nerdcommenter'
         Plugin 'airblade/vim-gitgutter'
         Plugin 'pangloss/vim-javascript'
-        Plugin 'helino/vim-json'
+        Plugin 'elzr/vim-json'
         Plugin 'ternjs/tern_for_vim'
+        Plugin 'mattn/emmet-vim'
+        Plugin 'groenewege/vim-less'
+        Plugin 'mtscout6/syntastic-local-eslint.vim'
+        Plugin 'mattn/gist-vim'
+        Plugin 'leafgarland/typescript-vim'
+        Plugin 'Quramy/vim-js-pretty-template'
+        Plugin 'mhartington/vim-typings'
+        Plugin 'ajh17/VimCompletesMe'
 
     " Colorschemes
         Plugin 'vim-airline/vim-airline-themes'
         Plugin 'altercation/vim-colors-solarized'
         Plugin 'w0ng/vim-hybrid'
         Plugin 'morhetz/gruvbox'
+        Plugin 'yearofmoo/Vim-Darkmate'
+        Plugin 'dracula/vim'
+        Plugin 'connorholyday/vim-snazzy'
 " }
 
 call vundle#end()
@@ -58,21 +72,22 @@ set directory=~/.vim/tmp/swaps
 set undodir=~/.vim/tmp/undo
 " }
 
+
 " Formatting {
 
     set nowrap                      " Wrap long lines
     set autoindent                  " Indent at the same level of the previous line
     set shiftwidth=4                " Use indents of 4 spaces
     set expandtab                   " Tabs are spaces, not tabs
-    set tabstop=4                   " An indentation every four columns
-    set softtabstop=4               " Let backspace delete indent
+    set tabstop=2                   " An indentation every four columns
+    set softtabstop=2               " Let backspace delete indent
     set nojoinspaces                " Prevents inserting two spaces after punctuation on a join (J)
     set splitright                  " Puts new vsplit windows to the right of the current
     set splitbelow                  " Puts new split windows to the bottom of the current
     "set matchpairs+=<:>             " Match, to be used with %
     set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
     " Remove trailing whitespaces and ^M chars
-    autocmd FileType c,cpp,java,go,php,javascript,python,twig,xml,yml autocmd BufWritePre <buffer> call StripTrailingWhitespace()
+    autocmd FileType c,cpp,java,gohp,javascriptython,twig,xml,yml autocmd BufWritePre <buffer> call StripTrailingWhitespace()
     autocmd FileType go autocmd BufWritePre <buffer> Fmt
     " preceding line best in a plugin but here for now.
 
@@ -208,6 +223,8 @@ set undodir=~/.vim/tmp/undo
     map <S-j> 15j
     map <S-k> 15k
 
+    " Adjust increment command
+    nnoremap <C-d> <C-a>
 " }
 
 " { Plugin Config
@@ -269,8 +286,29 @@ set undodir=~/.vim/tmp/undo
 
         let g:syntastic_javascript_checkers = ['eslint']
         let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute " ,"trimming empty <", "unescaped &" , "lacks \"action", "is not recognized!", "discarding unexpected"]
-        let g:syntastic_check_on_open = 1
-        let g:syntastic_check_on_wq = 0
+        let g:syntastic_check_on_open = 0
+        let g:syntastic_check_on_wq = 1
+        let g:syntastic_always_populate_loc_list = 1
+        let g:syntastic_auto_loc_list = 0
+        let g:syntastic_loc_list_height = 5
+        let g:syntastic_error_symbol = '✗✗'
+        let g:syntastic_style_error_symbol = '✠✠'
+        let g:syntastic_warning_symbol = '∆∆'
+        let g:syntastic_style_warning_symbol = '≈≈'
+        let g:syntastic_mode_map = { "passive_filetypes": [ "less" ] }
+    " }
+
+    " Tern {
+        let g:tern_map_keys = 1
+        let g:tern_show_argument_hints = 'on_hold'
+        let g:tern_map_prefix = '<leader>'
+    " }
+
+    " Git Gutter {
+        "let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
+        "let g:gitgutter_sign_modified = emoji#for('small_orange_diamond')
+        "let g:gitgutter_sign_removed = emoji#for('small_red_triangle')
+        "let g:gitgutter_sign_modified_removed = emoji#for('collision')
     " }
 
     " Silver Searcher {
@@ -287,14 +325,14 @@ set undodir=~/.vim/tmp/undo
             " No need to cache since ag is fast
             let g:ctrlp_use_caching = 0
 
-            command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+            "command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
         endif
-
-        " Bind f to search for word under cursor
-        "map <C-f> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
         " bind \ to grep shortcut
         nnoremap \ :Ag<SPACE>
+
+        " start ag in root directory always
+        let g:ag_working_path_mode="r"
 
     " }
 
@@ -376,16 +414,50 @@ set undodir=~/.vim/tmp/undo
     " YouCompleteMe {
         let g:ycm_autoclose_preview_window_after_completion = 1
         let g:ycm_autoclose_preview_window_after_insertion = 1
-        let g:ycm_path_to_python_interpreter = '/usr/bin/python'
+        let g:ycm_path_to_python_interpreter = '/usr/local/bin/python'
         let g:ycm_server_use_vim_stdout = 0
         let g:ycm_server_keep_logfiles = 1
     " }"
+
+    " UltiSnips {
+        let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
+    " }
+
+    " making YCM and UltiSnips work together
+        "let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+        "let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+        "let g:SuperTabDefaultCompletionType = '<C-n>'
+
+        "let g:UltiSnipsExpandTrigger="<cr>"
+        "let g:UltiSnipsJumpForwardTrigger="<c-j>"
+        "let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+        let g:SuperTabDefaultCompletionType    = '<C-n>'
+        let g:SuperTabCrMapping                = 0
+        let g:UltiSnipsExpandTrigger           = '<tab>'
+        let g:UltiSnipsJumpForwardTrigger      = '<tab>'
+        let g:UltiSnipsJumpBackwardTrigger     = '<s-tab>'
+        let g:ycm_key_list_select_completion   = ['<C-j>', '<C-n>', '<Down>']
+        let g:ycm_key_list_previous_completion = ['<C-k>', '<C-p>', '<Up>']
+
+    "}
 
 " }
 
 " Default Color Scheme
 syntax enable
-let g:gruvbox_invert_selection=0
-let g:solarized_termcolors=256
+"let g:gruvbox_invert_selection=0
+" let g:solarized_termcolors=256
+let g:gruvbox_italic=1
 colorscheme gruvbox
 set background=dark
+set termguicolors
+" set true colours
+let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+" highlight Comment gui=italic
+" highlight Comment cterm=italic
+"highlight htmlArg gui=italic
+"highlight htmlArg cterm=italic
+"highlight Type gui=italic
+"highlight Type cterm=italic
+
