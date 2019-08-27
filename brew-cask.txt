@@ -1,0 +1,7 @@
+aerial                                    font-fantasquesansmono-nerd-font          lincastor                                 quicklook-csv
+betterzipql                               font-fira-code                            mplayerx                                  quicklook-json
+calibre                                   font-firacode-nerd-font                   omnidisksweeper                           robo-3t
+clipy                                     hyper                                     onyx                                      robomongo
+docker                                    kap                                       qlcolorcode                               simple-comic
+filezilla                                 keka                                      qlmarkdown                                slack
+font-droid-sans-mono-for-powerline        keybase                                   qlstephen                                 yacreader
